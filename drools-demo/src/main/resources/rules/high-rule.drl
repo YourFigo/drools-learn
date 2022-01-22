@@ -1,0 +1,54 @@
+package rules
+
+import top.figo.entity.Person;
+
+global java.util.List myGlobalList;
+
+rule "rule_global_variable_1"
+    when
+    // Empty
+    then
+        myGlobalList.add( "Hello world" );
+        System.out.println("rule_global_variable_1 execution ...");
+end
+
+rule "rule_global_variable_2"
+    when
+    // Empty
+    then
+        myGlobalList.add("I am Figo");
+        System.out.println("rule_global_variable_2 execution ...");
+end
+
+// 不带参数查询
+// 查询年龄小于20的Person
+query "query_age"
+    $person:Person( age < 21 )
+end
+
+// 带参数的query
+// 查询符合年龄并且名字和传递的nameParam系统的Person
+query "query_age_name"(String nameParam)
+    $person:Person(age > 25, name == nameParam);
+end
+
+rule "rule_query_modify_name"
+    when
+        $person:Person(name == "Tony");
+    then
+        $person.setName("Toby");
+        System.out.println("rule_query_modify_name execution: set name as Toby");
+end
+
+// 定义一个函数
+function String hello(String applicantName) {
+    return "Hello " + applicantName + "!";
+}
+
+rule "rule_function_test"
+    when
+        $person:Person(name != null, age > 30);
+    then
+        String helloPerson = hello($person.getName());
+        System.out.println("rule_function_test execution: " + helloPerson);
+end
