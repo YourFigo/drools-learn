@@ -42,4 +42,26 @@ public class AttributeRuleTest {
         System.out.println(new Date());
         kieSession.fireAllRules();
     }
+
+    @Test
+    public void testAgendaGroup(){
+        //只给agenda_02设置焦点
+        kieSession.getAgenda().getAgendaGroup("agenda_02").setFocus();
+        kieSession.getAgenda().getAgendaGroup("agenda_01").setFocus();
+        kieSession.fireAllRules();
+    }
+
+    @Test
+    public void testTimer() throws InterruptedException {
+
+        System.out.println(new Date());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                kieSession.fireUntilHalt();
+            }
+        }).start();
+        Thread.sleep(10000);
+        kieSession.halt();
+    }
 }

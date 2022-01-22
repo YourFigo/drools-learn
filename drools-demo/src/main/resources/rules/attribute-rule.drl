@@ -1,6 +1,7 @@
 package rules
 
-import java.util.Date;
+import java.util.Date
+import java.text.SimpleDateFormat;
 
 // date-effective
 rule "rule_date-effective"
@@ -18,4 +19,47 @@ rule "rule_date-expires"
         eval(true)
     then
         System.out.println("date-expires 规则: 失效时间");
+end
+
+rule "rule_agenda-group_01"
+    agenda-group "agenda_01"
+    when
+        eval(true)
+    then
+        System.out.println("agenda-group 规则: agenda_01");
+end
+
+rule "rule_agenda-group_02"
+    agenda-group "agenda_02"
+    when
+        eval(true)
+    then
+        System.out.println("agenda-group 规则: agenda_02");
+end
+
+rule "rule_agenda-group_03"
+    agenda-group "agenda_03"
+    auto-focus true
+    when
+        eval(true)
+    then
+        System.out.println("agenda-group 规则: agenda_03");
+end
+
+rule "rule_timer_1"
+    // 5秒后开始执行，每2秒执行一次
+    timer (5s 2s)
+    when
+    then
+        System.out.println("rule_timer_1 规则: "+
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+end
+
+rule "rule_timer_2"
+    // 每秒执行一次
+    timer (cron:0/1 * * * * ? )
+    when
+    then
+        System.out.println("rule_timer_2 规则: "+
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 end
