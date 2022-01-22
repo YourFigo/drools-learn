@@ -52,7 +52,7 @@ public class DiscountRulesTest {
     public void testDiscountRules(){
         // 构建Fact对象，规则引擎的working memory中用到的JavaBean
         Order order = new Order();
-        order.setOriginalPrice(255.0);
+        order.setOriginalPrice(-1.0);
 
         // 将数据交给规则引擎，规则引擎根据Fact进行匹配
         kieSession.insert(order);

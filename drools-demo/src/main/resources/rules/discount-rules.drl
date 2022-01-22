@@ -5,8 +5,20 @@ import top.figo.entity.Order;
 /*
 根据订单金额创建不同的优惠规则
 */
+rule "rule_0"
+    // salience 优先级，默认为0
+    salience 10
+    // 具有相同activation-group的rule，只有一个会被执行
+    activation-group "amountJudgment"
+when
+    $order:Order(originalPrice == 0 || originalPrice < 0)
+then
+    $order.setRealPrice(Double.MIN_NORMAL);
+    System.out.println("rule_0: 订单初始金额有误");
+end
 
 rule "rule_1"
+    activation-group "amountJudgment"
 when
     $order:Order(originalPrice < 100)
 then
@@ -15,14 +27,18 @@ then
 end
 
 rule "rule_2"
+    activation-group "amountJudgment"
 when
-    $order:Order(originalPrice >= 100 && originalPrice < 200)
+//    eval(true)
+//    $order:Order(originalPrice >= 100 && originalPrice < 200)
+    $order:Order(originalPrice >= 100, originalPrice < 200)
 then
     $order.setRealPrice($order.getOriginalPrice() - 20);
     System.out.println("rule_2: 优惠20");
 end
 
 rule "rule_3"
+    activation-group "amountJudgment"
 when
     $order:Order(originalPrice >= 200 && originalPrice < 300)
 then
@@ -31,6 +47,7 @@ then
 end
 
 rule "rule_4"
+    activation-group "amountJudgment"
 when
     $order:Order(originalPrice >= 300)
 then
