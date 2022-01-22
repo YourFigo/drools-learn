@@ -1,0 +1,21 @@
+package rules
+
+import java.util.Date;
+
+// date-effective
+rule "rule_date-effective"
+    date-effective "2022-01-21"
+    when
+        eval(true)
+    then
+        System.out.println("date-effective 规则: 生效时间");
+end
+
+// date-expires
+rule "rule_date-expires"
+    date-expires "2099-01-23"
+    when
+        eval(true)
+    then
+        System.out.println("date-expires 规则: 失效时间");
+end

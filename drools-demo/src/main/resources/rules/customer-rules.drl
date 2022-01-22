@@ -1,0 +1,108 @@
+package rules
+
+import top.figo.entity.*;
+
+// contains 检查一个Fact对象的某个属性是否包含一个指定的对象值
+rule "rule_contains"
+    when
+        $order:Order();
+        $customer:Customer(orderList contains $order);
+    then
+        System.out.println("contains规则: orderList 包含 order");
+end
+
+// not contains: 检查一个Fact对象的某个属性是否不包含一个指定的对象值
+rule "rule_not_contains"
+    when
+        $order:Order();
+        $customer:Customer(orderList not contains $order);
+    then
+        System.out.println("not contains规则: orderList 不包含 order");
+end
+
+// memberOf: 判断一个Fact对象的某个属性值是否在一个或者多个集合中
+rule "rule_memberOf"
+    when
+        $order:Order();
+        $customer:Customer($order memberOf orderList);
+    then
+        System.out.println("memberOf 规则: order 在 orderList 集合中");
+end
+
+
+//not memberOf: 判断一个Fact对象的某个属性值是否不在一个或者多个集合中
+rule "rule_not_memberOf"
+    when
+        $order:Order();
+        $customer:Customer($order not memberOf orderList);
+    then
+        System.out.println("not memberOf 规则: order 不在 orderList 集合中");
+end
+
+//matches: 判断一个Fact对象的某个属性值是否与提供的标准java正则表达式相匹配
+rule "rule_matches"
+    when
+        $customer:Customer(name matches "张.*");
+    then
+        System.out.println("matches 规则: 顾客姓张");
+end
+
+//not matches: 判断一个Fact对象的某个属性值是否与提供的标准java正则表达式不匹配
+rule "rule_not_matches"
+    when
+        $customer:Customer(name not matches "张.*");
+    then
+        System.out.println("not matches 规则: 顾客不姓张");
+end
+
+// set
+rule "rule_set"
+    when
+        $customer:Customer();
+    then
+        System.out.println("set 规则: set name");
+        $customer.setName("张三");
+end
+
+// modify
+rule "rule_modify"
+    when
+        $customer:Customer();
+    then
+        System.out.println("modify 规则: modify name");
+        $customer.setName("李四");
+end
+
+// insert
+rule "rule_insert"
+    when
+        eval(true);
+    then
+        System.out.println("insert 规则: insert customer");
+        Customer customer = new Customer();
+        customer.setName("Tom");
+//        insert(customer);
+        insertLogical(customer);
+        System.out.println(customer);
+end
+
+// update
+rule "rule_update"
+    when
+        $customer:Customer(name == "Tom")
+    then
+        System.out.println("update 规则: update customer");
+        $customer.setName("Tony");
+        update($customer);
+        System.out.println($customer);
+end
+
+// retract
+rule "rule_retract"
+    when
+        $customer:Customer(name == "Tony")
+    then
+        System.out.println("retract 规则: retract customer");
+        retract($customer)
+        System.out.println($customer);
+end
